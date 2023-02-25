@@ -1,4 +1,4 @@
-package com.example.natvkg.entities.models;
+package com.example.natvkg.entities;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -10,14 +10,16 @@ import java.util.Date;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "tb_order_dates")
-public class OrderDate {
+@Table(name = "tb_discounts")
+public class Discount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    Date date;
+    int discount;
+    Date start_date;
+    Date end_date;
+    int discount_days;
     @ManyToOne
-    @JoinColumn(name = "order_id")
-    Order order;
-
+    @JoinColumn(name = "channel_id")
+    Channel channel;
 }

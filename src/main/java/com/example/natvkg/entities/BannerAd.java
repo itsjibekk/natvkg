@@ -1,4 +1,4 @@
-package com.example.natvkg.entities.models;
+package com.example.natvkg.entities;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
