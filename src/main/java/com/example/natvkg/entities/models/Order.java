@@ -1,8 +1,6 @@
 package com.example.natvkg.entities.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -12,8 +10,10 @@ import java.util.Date;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
+@Table(name = "tb_orders")
 public class Order {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     Date created_date;
     String client_email;
@@ -21,10 +21,13 @@ public class Order {
     String client_phone;
     String order_status;
     @ManyToOne
+    @JoinColumn(name = "channel_id")
     Channel channel;
     @ManyToOne
+    @JoinColumn(name = "text_ad_id")
     TextAd textAd;
     @ManyToOne
+    @JoinColumn(name = "banner_ad_id")
     BannerAd bannerAd;
     double order_sum;
 
