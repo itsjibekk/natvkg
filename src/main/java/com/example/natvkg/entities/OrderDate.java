@@ -19,5 +19,8 @@ public class OrderDate {
     @ManyToOne
     @JoinColumn(name = "order_id")
     Order order;
+    @ManyToOne
+    @JoinColumn(name = "channel_id")
+    Channel channel;
 
 }

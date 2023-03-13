@@ -1,5 +1,6 @@
 package com.example.natvkg.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -15,9 +16,11 @@ public class Price {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    double price_per_symbol;
-    double banner_price;
+    int price_per_symbol;
+
+    @JsonFormat(pattern = "dd.MM.yyyy")
     Date start_date;
+    @JsonFormat(pattern = "dd.MM.yyyy")
     Date end_date;
     @ManyToOne
     @JoinColumn(name = "channel_id")

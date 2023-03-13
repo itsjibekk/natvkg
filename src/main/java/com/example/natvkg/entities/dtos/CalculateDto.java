@@ -7,8 +7,11 @@ import lombok.experimental.FieldDefaults;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DiscountDto {
-    @JsonProperty("from_days_count")
-    int discount_days;
-    int discount;
+public class CalculateDto {
+    String text;
+    int daysCount;
+    @JsonProperty("channelId")
+    Long channel_id;
+    double price;
+    double priceWithDiscount;
 }

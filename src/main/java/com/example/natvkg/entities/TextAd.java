@@ -14,5 +14,6 @@ public class TextAd {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     int symbol_count;
+    String text;
 
 }
