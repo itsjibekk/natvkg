@@ -28,5 +28,8 @@ public class ChannelController {
     public ResponseEntity<?> calculate(@RequestBody CalculateDto orderDto){
         return channelService.calculate(orderDto);
     }
-
+    @PostMapping("/update")
+    public ResponseEntity<?> update(@RequestBody ChannelDto channelDto){
+        return channelService.update(channelDto);
+    }
 }

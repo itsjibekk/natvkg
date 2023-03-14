@@ -11,5 +11,5 @@ public interface PriceRepo extends JpaRepository<Price,Long> {
     Integer findPriceByChannel_id(Long id);
 
     @Query(value = "select max(discount) from tb_discounts where channel_id = :channelId and discount_days <= :daysCount",nativeQuery = true)
-    int findByDaysAndChannelId(int daysCount, Long channelId);
+    Integer findByDaysAndChannelId(int daysCount, Long channelId);
 }

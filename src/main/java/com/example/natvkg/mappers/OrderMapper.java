@@ -23,9 +23,10 @@ public interface OrderMapper {
     @Named("calculateSymbolCount")
     default Integer calculateSymbolCount(OrderDto orderDto) {
     return orderDto.getText().replaceAll(" ","").length();
-}
+    }
     @Mapping(target = "channelId",source = "channel.id")
     ChannelDtoForOrder toChannelDtoForOrder(Channel channel);
-
     ArrayList<ChannelDtoForOrder> channelListToChannelDtoForOrderList(List<Channel> channels);
+
+    Channel toChannelFromDto(ChannelDtoForOrder x);
 }

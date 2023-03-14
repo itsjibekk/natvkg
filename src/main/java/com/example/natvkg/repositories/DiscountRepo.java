@@ -13,4 +13,6 @@ public interface DiscountRepo extends JpaRepository<Discount,Long> {
 
     @Query(value = "select max(discount) from tb_discounts where channel_id = :id and discount_days <= :daysCount",nativeQuery = true)
     Integer findDiscountByChannelId(int daysCount,Long id);
+
+    List<Discount> findAll();
 }

@@ -12,4 +12,6 @@ public interface ChannelService {
     List<ChannelDto> list();
 
      ResponseEntity<?> calculate(CalculateDto orderDto);
+
+    ResponseEntity<?> update(ChannelDto channelDto);
 }

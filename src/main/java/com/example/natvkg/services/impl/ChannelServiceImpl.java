@@ -1,13 +1,14 @@
 package com.example.natvkg.services.impl;
+
 import com.example.natvkg.entities.Channel;
 import com.example.natvkg.entities.dtos.CalculateDto;
 import com.example.natvkg.entities.dtos.ChannelDto;
+import com.example.natvkg.mappers.ChannelMapper;
+import com.example.natvkg.mappers.DiscountMapper;
 import com.example.natvkg.repositories.ChannelRepo;
 import com.example.natvkg.repositories.DiscountRepo;
 import com.example.natvkg.repositories.OrderDateRepo;
 import com.example.natvkg.repositories.PriceRepo;
-import com.example.natvkg.mappers.ChannelMapper;
-import com.example.natvkg.mappers.DiscountMapper;
 import com.example.natvkg.services.ChannelService;
 import com.example.natvkg.services.DiscountService;
 import com.example.natvkg.services.PriceService;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
@@ -55,11 +57,12 @@ public class ChannelServiceImpl implements ChannelService {
             int pricePerLetter = priceRepo.findPriceByChannel_id(orderDto.getChannel_id());
             String stringWithoutSpaces = orderDto.getText().replaceAll("\\s+", "");
             if (stringWithoutSpaces.length() < 20)
-                return ResponseEntity.ok("Enter at lest 20 characters in announcement text(not counting spaces)");
+                return ResponseEntity.ok("Enter at least 20 characters in announcement text(not counting spaces)");
             price = pricePerLetter * stringWithoutSpaces.length() * orderDto.getDaysCount();
             orderDto.setPrice(price);
-            int discount = priceRepo.findByDaysAndChannelId(orderDto.getDaysCount(), orderDto.getChannel_id());
-            if (discount == 0) orderDto.setPriceWithDiscount(price);
+            Integer discount = (Integer) priceRepo.findByDaysAndChannelId(orderDto.getDaysCount(), orderDto.getChannel_id());
+            int discountNotNull = (discount != null) ? discount : 0;
+            if (discountNotNull == 0) orderDto.setPriceWithDiscount(price);
             else {
                 double priceWithDiscount = price - (price * discount) / 100;
                 orderDto.setPriceWithDiscount(priceWithDiscount);
@@ -69,5 +72,20 @@ public class ChannelServiceImpl implements ChannelService {
         }
         return ResponseEntity.ok(orderDto);
     }
+    @Override
+    public ResponseEntity<?> update(ChannelDto channelDto) {
+       Optional<Channel> channel1 = channelRepo.findById(channelDto.getId());
+        if (channel1.isPresent()) {
+            Channel channel = channel1.get();
+            channel = channelRepo.save(ChannelMapper.INSTANCE.toChannel(channelDto));
+            channel.setCreated_date(new Date());
+            ChannelDto channelDto1 = ChannelMapper.INSTANCE.toChannelDto(channel);
+            channelDto1.setPrice_per_symbol(priceService.save(channelDto.getPrice_per_symbol(), channel.getId()));
+            channelDto1.setDiscountList(discountService.saveAllDiscounts(channelDto.getDiscountList(), channelDto1.getId()));
+            return ResponseEntity.ok(channelDto1);
+        }
 
+        return ResponseEntity.ok("No such channel");
+    }
 }
+

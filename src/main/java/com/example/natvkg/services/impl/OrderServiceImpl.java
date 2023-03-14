@@ -2,6 +2,7 @@ package com.example.natvkg.services.impl;
 
 import com.example.natvkg.entities.Channel;
 import com.example.natvkg.entities.Order;
+import com.example.natvkg.entities.TextAd;
 import com.example.natvkg.entities.dtos.ChannelDtoForOrder;
 import com.example.natvkg.entities.dtos.OrderDto;
 import com.example.natvkg.mappers.OrderMapper;
@@ -9,6 +10,7 @@ import com.example.natvkg.repositories.*;
 import com.example.natvkg.services.OrderDateService;
 import com.example.natvkg.services.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -23,6 +25,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderDateService orderDateService;
     private final PriceRepo priceRepo;
     private final DiscountRepo discountRepo;
+    private final TextAdRepo textAdRepo;
     @Override
     public OrderDto save(OrderDto orderDto) {
          List<Long> channelIds = orderDto.getChannels().stream()
@@ -48,6 +51,14 @@ public class OrderServiceImpl implements OrderService {
          orderRepo.save(order);
          return orderDto1;
     }
+
+    @Override
+    public List<Order> list() {
+        return orderRepo.findAll();
+    }
+
+
+
     public List<ChannelDtoForOrder> getChannelsForOrder(Order order,OrderDto orderDto) {
         List<ChannelDtoForOrder> channelDtoList = new ArrayList<>();
         for (Channel channel : order.getChannels()) {
@@ -55,7 +66,8 @@ public class OrderServiceImpl implements OrderService {
             channelDto.setChannelId(channel.getId());
             List<Date> dates = orderDateRepo.getDatesByChannelAndOrder(channel.getId(), order.getId());
             channelDto.setDays(dates);
-            double price_per_symbol =  priceRepo.findPriceByChannel_id(channel.getId());
+            Integer price_per_symbol =  priceRepo.findPriceByChannel_id(channel.getId());
+            price_per_symbol = price_per_symbol != null ? price_per_symbol : 1;
             double text_count = order.getTextAd().getText().length();
             double price = price_per_symbol * text_count;
             channelDto.setPrice(price);

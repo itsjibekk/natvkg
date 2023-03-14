@@ -13,10 +13,14 @@ import java.util.List;
 
 public interface ChannelMapper {
     ChannelMapper INSTANCE = Mappers.getMapper(ChannelMapper.class);
+
     Channel toChannel(ChannelDto channelDto);
+
+    @Mapping(target = "active",source = "active")
     ChannelDto toChannelDto(Channel channel);
+
     List<ChannelDto> toChannelDtos(List<Channel> channelList);
-    List<ChannelDtoForOrder> toChannelDtoFrom(List<Channel> channels);
+
     ChannelDtoForOrder toChannelDtoFrom(Channel channel);
 
 }
